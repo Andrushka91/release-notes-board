@@ -1,0 +1,76 @@
+<main class="page-shell">
+  <header class="page-header">
+    <div>
+      <p class="eyebrow">Product delivery</p>
+      <h1>Release Notes Board</h1>
+      <p class="intro">Capture changes, review them, and publish a clear release history.</p>
+    </div>
+    <button class="secondary-button" type="button" (click)="loadBoard()" [disabled]="isLoading" aria-label="Refresh board">
+      Refresh
+    </button>
+  </header>
+
+  <p class="alert" role="alert" *ngIf="errorMessage">{{ errorMessage }}</p>
+
+  <section class="board-grid">
+    <aside class="card create-card" aria-labelledby="create-heading">
+      <div class="section-heading">
+        <p class="eyebrow">New entry</p>
+        <h2 id="create-heading">Add a release note</h2>
+      </div>
+
+      <form [formGroup]="form" (ngSubmit)="createItem()" novalidate>
+        <label for="application">Application</label>
+        <select id="application" formControlName="applicationId" [attr.aria-invalid]="form.controls.applicationId.touched && form.controls.applicationId.invalid">
+          <option [ngValue]="null" disabled>Select an application</option>
+          <option *ngFor="let application of applications" [ngValue]="application.id">{{ application.name }}</option>
+        </select>
+        <small class="field-error" *ngIf="form.controls.applicationId.touched && form.controls.applicationId.invalid">Choose an application.</small>
+
+        <label for="title">Title</label>
+        <input id="title" type="text" formControlName="title" maxlength="200" placeholder="e.g. Faster customer search">
+        <small class="field-error" *ngIf="form.controls.title.touched && form.controls.title.invalid">A title is required (max. 200 characters).</small>
+
+        <label for="description">Description <span>(optional)</span></label>
+        <textarea id="description" rows="5" formControlName="description" maxlength="2000" placeholder="Describe the change and its value."></textarea>
+
+        <button class="primary-button" type="submit" [disabled]="isSaving || applications.length === 0">
+          {{ isSaving ? 'Saving…' : 'Create draft' }}
+        </button>
+      </form>
+    </aside>
+
+    <section class="card entries-card" aria-labelledby="entries-heading">
+      <div class="section-heading list-heading">
+        <div>
+          <p class="eyebrow">Release notes</p>
+          <h2 id="entries-heading">Entries</h2>
+        </div>
+        <span class="count" *ngIf="!isLoading">{{ items.length }}</span>
+      </div>
+
+      <div class="loading" *ngIf="isLoading">Loading board…</div>
+      <div class="empty-state" *ngIf="!isLoading && items.length === 0">
+        <h3>No entries yet</h3>
+        <p>Create the first draft from the form.</p>
+      </div>
+
+      <ul class="entry-list" *ngIf="!isLoading && items.length > 0">
+        <li class="entry" *ngFor="let item of items; trackBy: trackItem">
+          <div class="entry-content">
+            <p class="application-name">{{ item.application.name }}</p>
+            <h3>{{ item.title }}</h3>
+            <p class="description" *ngIf="item.description">{{ item.description }}</p>
+            <p class="date">Created {{ item.createdAt | date:'mediumDate' }}</p>
+          </div>
+          <div class="status-control">
+            <label [for]="'status-' + item.id">Status</label>
+            <select [id]="'status-' + item.id" [value]="item.status" (change)="changeStatus(item, $event)" [disabled]="changingItemIds.has(item.id)">
+              <option *ngFor="let status of statuses" [value]="status">{{ status }}</option>
+            </select>
+          </div>
+        </li>
+      </ul>
+    </section>
+  </section>
+</main>
