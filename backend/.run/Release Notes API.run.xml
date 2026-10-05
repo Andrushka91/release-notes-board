@@ -1,0 +1,10 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Release Notes API" type="Application" factoryName="Application">
+    <option name="MAIN_CLASS_NAME" value="com.ayesa.releasenotes.ReleaseNotesApplication" />
+    <module name="release-notes-api" />
+    <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
