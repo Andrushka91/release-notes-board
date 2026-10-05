@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: release-notes-api
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:release_notes}}
+    username: ${DB_USERNAME:release_notes}
+    password: ${DB_PASSWORD:release_notes}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+  flyway:
+    enabled: true
+
+server:
+  port: ${SERVER_PORT:8080}
+
+app:
+  cors:
+    allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:4200}
